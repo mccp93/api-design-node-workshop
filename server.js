@@ -7,11 +7,12 @@ const _ = require('lodash');
 var app = express();
 var players = [];
 
+app.use(morgan('dev'));
 app.use(express.static('client'));
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(bodyParser.json());
 
-/*
+/** 
     Middleware to grab id and attach it to the body of each request.
     Put before the routers otherwise it would get called after the
     HTTP request has hit the routing function.
@@ -27,11 +28,7 @@ app.param('id', function(req, res, next, id){
     }
 });
 
-var updateId = function(req, res, next){
-    req
-};
-
-/*
+/** 
     Express.static will server everything in the client as a static resource. 
     index.html is set as the root GET of that directory get('/');
 */
@@ -43,7 +40,7 @@ app.get('/', function(req, res){
     });
 });
 
-/*
+/** 
     Gets all players from local array storage.
 */  
 app.get("/players", function(req, res){
@@ -55,7 +52,7 @@ app.get('/players/:id', function(req, res){
     res.json(player);
 });
 
-/*
+/** 
     Adds a player to the local array storage.
 */
 app.post('/add', function(req, res){
@@ -65,7 +62,7 @@ app.post('/add', function(req, res){
     res.redirect('/');
 });
 
-/*
+/** 
     Updates a player from local array storage by id.
 */
 app.put('/players/:id', function(req, res){
@@ -85,7 +82,7 @@ app.put('/players/:id', function(req, res){
     }
 });
 
-/*
+/** 
     Deletes a player from the local array storage by id.
 */
 app.delete('/players/:id', function(req, res){
@@ -100,7 +97,7 @@ app.delete('/players/:id', function(req, res){
     }    
 });
 
-/*
+/** 
     Basic custom error handling middleware.
     @param err - 4 params needed to catch err as first param
     otherwise with 3 we'll only get req, res, next.
