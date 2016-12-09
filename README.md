@@ -1,2 +1,2 @@
 ## README
-Repo for work/demos on FrontEndMaster's Node API Design workshop.
+Repo for working alongside FrontEndMaster's Node API Design workshop.
