@@ -1,5 +1,7 @@
-const express = require('express');
-const router = express.Router();
+const router = require('express').Router();
+
+var players = [];
+var id = 0;
 
 var updateId = function(req, res, next){
     if(!req.body.id){
@@ -8,7 +10,6 @@ var updateId = function(req, res, next){
     }
     next();
 }
-
 /**
     Middleware to grab id and attach it to the body of each request.
     Put before the routers otherwise it would get called after the
@@ -26,25 +27,13 @@ router.param('id', function(req, res, next, id){
 });
 
 /** 
-    Express.static will server everything in the client as a static resource. 
-    index.html is set as the root GET of that directory get('/');
-*/
-router.get('/', function(req, res){
-    res.sendFile('/' + __dirname + 'index.html', function(err){
-        if(err){
-            res.status(500).send(err);
-        }
-    });
-});
-
-/** 
     Gets all players from local array storage.
 */  
-router.get("/players", function(req, res){
+router.get("/", function(req, res){
     res.json(players);
 });
 
-router.get('/players/:id', function(req, res){
+router.get('/:id', function(req, res){
     var player = _.find(players, {id: req.params.id});
     res.json(player);
 });
@@ -52,16 +41,16 @@ router.get('/players/:id', function(req, res){
 /** 
     Adds a player to the local array storage.
 */
-router.post('/players', updateId, function(req, res){
+router.post('/', updateId, function(req, res){
     var player = req.body;
     players.push(player);
-    res.json(player);
+    res.json(players);
 });
 
 /** 
     Updates a player from local array storage by id.
 */
-router.put('/players/:id', function(req, res){
+router.put('/:id', function(req, res){
     var update = req.body;
     
     if(update.id){
@@ -81,7 +70,7 @@ router.put('/players/:id', function(req, res){
 /** 
     Deletes a player from the local array storage by id.
 */
-router.delete('/players/:id', function(req, res){
+router.delete('/:id', function(req, res){
     var player = _.findIndex(players, {id: req.params.id});
 
     if(!players[player]){

@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>API</title>
+</head>
+
+<body>
+  <h1>Football Players API</h1>
+
+  <h3> Players Form </h3>
+  <div>
+    <form action="/players" method="POST">
+      <div>
+        <label> Name: </label>
+        <input type="text" name="name" />
+      </div>
+      <div>
+        <label> Age: </label>
+        <input type="number" name="age" />
+      </div>
+      <div>
+        <select name="position">
+          <option value="Goalkeeper"> Goalkeeper </option>
+          <option value="Defender"> Defender </option>
+          <option value="Midfielder"> Midfielder </option>
+          <option value="Forward"> Forward </option>
+        </select>
+      </div>
+      <input type="submit" class="button">
+    </form>
+  </div>
+</body>
+
+</html>
