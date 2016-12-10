@@ -3,8 +3,8 @@ const router = require('express').Router();
 var managers = [];
 var id = 0;
 
-var updateId = function(req, res, next){
-    if(!req.body.id){
+var updateId = function (req, res, next) {
+    if (!req.body.id) {
         id++;
         req.body.id = id + '';
     }
@@ -15,72 +15,60 @@ var updateId = function(req, res, next){
     Middleware to grab id and attach it to the body of each request.
     Put before the routers otherwise it would get called after the
     HTTP request has hit the routing function.
-*/  
-router.param('id', function(req, res, next, id){
-    var manager = _.find(managers, {id: id});
+    @param {string} id - id of the specified object.
+*/
+router.param('id', function (req, res, next, id) {
+    var manager = _.find(managers, { id: id });
 
-    if(manager){
+    if (manager) {
         req.manager = manager;
         next();
-    }else{
+    } else {
         res.send();
     }
 });
 
-/** 
-    Gets all managers from local array storage.
-*/  
-router.get("/", function(req, res){
-    res.json(managers);
-});
 
-router.get('/:id', function(req, res){
-    var manager = _.find(managers, {id: req.params.id});
-    res.json(manager);
-});
+/**
+ * Routing for any Create or Read operations.
+ */
+router.route('/')
+    .get(function(req, res){
+        res.json(managers);
+    })
+    .post(function(req, res){
+        var manager = req.body;
+        managers.push(manager);
+        res.json(managers)
+    });
 
-/** 
-    Adds a manager to the local array storage.
-*/
-router.post('/', updateId, function(req, res){
-    var manager = req.body;
-    managers.push(manager);
-    res.json(manager);
-});
+/**
+ * Routing for any Read, Update, Delete operations on specific clubs.
+ * @param {string} :id - The id of the specified club object.
+ */
+router.route('/:id')
+    .get(function(req, res){
+        var manager = req.manager;
+        res.json(manager || {});
+    })
+    .put(function(req, res){
+        var update = req.body;
+        if(update.id){
+            delete update.id;
+        }
 
-/** 
-    Updates a manager from local array storage by id.
-*/
-router.put('/:id', function(req, res){
-    var update = req.body;
-    
-    if(update.id){
-        delete update.id;
-    }
-
-    var manager = _.findIndex(managers, {id: req.params.id});
-
-    if(!managers[manager]){
-        res.send('DOESNT EXIST!');
-    }else{
-        var updatedmanager = _.assign(managers[manager], update);
-        res.json(updatedmanager);
-    }
-});
-
-/** 
-    Deletes a manager from the local array storage by id.
-*/
-router.delete('/:id', function(req, res){
-    var manager = _.findIndex(managers, {id: req.params.id});
-
-    if(!managers[manager]){
-        res.send('DOESNT EXIST!');
-    }else{
-        var deletedmanager = managers[manager]
+        var manager = _.findIndex(managers, {id: req.params.id});
+        if(!managers[manager]){
+            res.send(); // Send nothing.
+        }else{
+            var updatedmanager = _.assign(managers[manager], updatedmanager);
+            res.json(updatedmanager);
+        }
+    })
+    .delete(function(req, res){
+        var manager = _.findIndex(managers, {id: req.params.id});
         managers.splice(manager, 1);
-        res.json(deleedmanager);
-    }    
-});
+        res.json(req.manager);
+    });
 
 module.exports = router;

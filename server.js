@@ -28,6 +28,7 @@ app.use('/players', playersRouter);
 */
 app.use(function(err, req, res, next){
     if(err){
+        console.log("ERROR: " + err.message);
         res.status(500).send(err);
     }
 });
