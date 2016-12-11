@@ -1,4 +1,5 @@
 const router = require('express').Router();
+const _ = require('lodash');
 
 var players = [];
 var id = 0;
@@ -34,10 +35,10 @@ router.route('/')
     .get(function(req, res){
         res.json(players);
     })
-    .post(function(req, res){
+    .post(updateId, function(req, res){
         var player = req.body;
         players.push(player);
-        res.json(players)
+        res.json(player);
     })
 
 /**
@@ -57,10 +58,11 @@ router.route('/:id')
         }
 
         var player = _.findIndex(players, {id: req.params.id});
+
         if(!players[player]){
             res.send(); // Send nothing.
         }else{
-            var updatedplayer = _.assign(players[player], updatedplayer);
+            var updatedplayer = _.assign(players[player], update);
             res.json(updatedplayer);
         }
     })
