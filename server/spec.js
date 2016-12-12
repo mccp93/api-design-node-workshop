@@ -61,4 +61,16 @@ describe('[PLAYERS]', function(){
                     });
             })
     });
+
+    it('should get one single player', function(done){
+        request(app)
+            .get('/players/1')
+            .set('Accept', 'application/json')
+            .expect('Content-Type', /json/)
+            .expect(200)
+            .end(function(err, res){
+                chai_expect(res.body).to.be.an('object');
+                done();
+            })
+    });
 });
